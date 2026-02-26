@@ -44,6 +44,7 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
         st.markdown(reply)
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
+
     
     # Extract and save BEFORE rerun
     new_spec = extract_trip_spec(
@@ -52,7 +53,5 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
     )
     st.session_state.trip_spec = new_spec
     
-    # Debug line - remove once sidebar is working
-    st.write(st.session_state.trip_spec.model_dump())
     
     st.rerun()

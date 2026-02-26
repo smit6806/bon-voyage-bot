@@ -1,3 +1,6 @@
+from datetime import datetime
+current_date = datetime.now().strftime("%B %d, %Y")
+
 SYSTEM_PROMPT = """
 You are Bon Voyage Bot, a warm and knowledgeable AI travel assistant. 
 Your job is to help users plan personalized trips through natural conversation.
@@ -24,8 +27,45 @@ Guidelines:
 
 
 EXTRACTION_PROMPT = """
+Today's date is {current_date}. Use this as a reference for any travel dates mentioned. If a user mentions a date without a year, assume it is the current year or next upcoming occurance of that date.
+
 Based on the conversation so far, extract any travel details that have been mentioned 
-and return ONLY a valid JSON object. Only include fields that have been explicitly mentioned.
-Do not guess or infer fields that haven't been discussed.
-Return ONLY the JSON with no extra text or explanation.
+and return ONLY a valid JSON object that exactly matches this structure:
+
+{
+    "origin": {"city": "", "airport_code": ""},
+    "dates": {
+        "start_date": null,
+        "end_date": null,
+        "month": null,
+        "year": null,
+        "nights": null,
+        "date_flexibility_days": null
+    },
+    "travelers": {"adults": 1, "children": 0},
+    "budget": {
+        "total_usd": null,
+        "flight_max_usd": null,
+        "lodging_per_night_max_usd": null
+    },
+    "preferences": {
+        "trip_type": [],
+        "pace": null,
+        "food_focus": null,
+        "luxury_level": null
+    },
+    "must_haves": [],
+    "dealbreakers": [],
+    "notes": null
+}
+
+Rules:
+- Only include fields that have been explicitly mentioned in the conversation
+- Use null for any fields not mentioned
+- origin.city is where the user is traveling FROM
+- dates.nights is the total number of nights
+- budget.total_usd is the overall trip budget in USD
+- Return ONLY valid JSON, no extra text
+- If no year is mentioned, use the current year from today's date provided above
+- dates.month should be the full month name as a string e.g. "March" not 3
 """

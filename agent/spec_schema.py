@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from pydantic import BaseModel
 
 class Origin(BaseModel):
@@ -8,7 +8,7 @@ class Origin(BaseModel):
 class Dates(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    month: Optional[str] = None
+    month: Optional[Union[str, int]] = None
     year: Optional[int] = None
     nights: Optional[int] = None
     date_flexibility_days: Optional[int] = None
