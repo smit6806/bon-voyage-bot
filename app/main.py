@@ -9,6 +9,7 @@ from agent.spec_builder import extract_trip_spec
 from agent.chat import get_chat_response
 from agent.prompts import SYSTEM_PROMPT
 from app.sidebar import render_sidebar
+from services.places import search_places
 
 # Page config
 st.set_page_config(page_title="Bon Voyage Bot", page_icon="✈️")
@@ -57,5 +58,17 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
     ready_tools = get_required_tools(st.session_state.trip_spec)
     print("READY TOOLS:", ready_tools)
     
-    
+    # Call Google Places if ready 
+    if "google_places" in ready_tools:
+        destination = f"{st.session_state.trip_spec.destination.city}, {st.session_state.trip_spec.destination.country}"
+        results = search_places("top restaurants and attractions", destination)
+        
+        if results:
+            places_summary = "\n".join([
+                f"- {p['displayName']['text']} ({p.get('formattedAddress', 'No address')})"
+                for p in results
+            ])
+            print("PLACES RESULTS:", places_summary)
+            st.session_state.places_data = places_summary
+
     st.rerun()
