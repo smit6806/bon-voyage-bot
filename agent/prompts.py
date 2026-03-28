@@ -27,45 +27,49 @@ Guidelines:
 
 
 EXTRACTION_PROMPT = """
-Today's date is {current_date}. Use this as a reference for any travel dates mentioned. If a user mentions a date without a year, assume it is the current year or next upcoming occurance of that date.
+Today's date is {current_date}. Use this as a reference 
+for any travel dates mentioned. If a user mentions a date 
+without a year, assume it is the next upcoming occurrence.
 
-Based on the conversation so far, extract any travel details that have been mentioned 
-and return ONLY a valid JSON object that exactly matches this structure:
+Extract travel details and return ONLY a JSON object 
+matching this structure exactly:
 
-{
-    "origin": {"city": "", "airport_code": ""},
-    "dates": {
+{{
+    "origin": {{"city": "", "airport_code": ""}},
+    "destination": {{"city": "", "country": "", "region": ""}},
+    "dates": {{
         "start_date": null,
         "end_date": null,
         "month": null,
         "year": null,
         "nights": null,
         "date_flexibility_days": null
-    },
-    "travelers": {"adults": 1, "children": 0},
-    "budget": {
+    }},
+    "travelers": {{"adults": 1, "children": 0}},
+    "budget": {{
         "total_usd": null,
         "flight_max_usd": null,
         "lodging_per_night_max_usd": null
-    },
-    "preferences": {
+    }},
+    "preferences": {{
         "trip_type": [],
         "pace": null,
         "food_focus": null,
         "luxury_level": null
-    },
+    }},
     "must_haves": [],
     "dealbreakers": [],
     "notes": null
-}
+}}
 
 Rules:
-- Only include fields that have been explicitly mentioned in the conversation
+- Only include fields explicitly mentioned in conversation
 - Use null for any fields not mentioned
 - origin.city is where the user is traveling FROM
+- destination.city is where the user is traveling TO
 - dates.nights is the total number of nights
 - budget.total_usd is the overall trip budget in USD
+- dates.month should be full month name e.g. "March"
+- If no year mentioned, use the current year
 - Return ONLY valid JSON, no extra text
-- If no year is mentioned, use the current year from today's date provided above
-- dates.month should be the full month name as a string e.g. "March" not 3
 """

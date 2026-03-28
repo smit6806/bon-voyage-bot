@@ -45,13 +45,17 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
 
     st.session_state.messages.append({"role": "assistant", "content": reply})
 
-    
-    # Extract and save BEFORE rerun
+    # Update TripSpec
     new_spec = extract_trip_spec(
         st.session_state.messages,
         st.session_state.trip_spec
     )
     st.session_state.trip_spec = new_spec
+    
+    # Check which tools are ready
+    from agent.tool_router import get_required_tools
+    ready_tools = get_required_tools(st.session_state.trip_spec)
+    print("READY TOOLS:", ready_tools)
     
     
     st.rerun()

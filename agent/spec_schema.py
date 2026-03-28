@@ -5,6 +5,11 @@ class Origin(BaseModel):
     city: str = ""
     airport_code: str = ""
 
+class Destination(BaseModel):
+    city: str = ""
+    country: str = ""
+    region: str = ""
+
 class Dates(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
@@ -30,6 +35,7 @@ class Preferences(BaseModel):
 
 class TripSpec(BaseModel):
     origin: Origin = Origin()
+    destination: Destination = Destination() 
     dates: Dates = Dates()
     travelers: Travelers = Travelers()
     budget: Budget = Budget()
