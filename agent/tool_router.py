@@ -4,7 +4,7 @@ from agent.spec_schema import TripSpec
 def get_required_tools(spec: TripSpec) -> list[str]:
     tools = []
     
-    has_destination = spec.origin.city != ""
+    has_destination = spec.destination.city != ""
     has_dates = spec.dates.nights is not None
     has_budget = spec.budget.total_usd is not None
     has_travelers = spec.travelers.adults > 0
