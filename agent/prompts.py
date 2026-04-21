@@ -105,3 +105,39 @@ Rules:
 - Each stay segment should have location, check_in, check_out, and nights if mentioned
 - Return ONLY valid JSON, no extra text
 """
+
+ITINERARY_PROMPT = """
+Based on the conversation so far, extract and update the travel itinerary.
+Return ONLY a valid JSON object matching this structure exactly:
+
+{
+    "summary": "brief one sentence summary of the trip",
+    "todo_items": [
+        {
+            "task": "description of what needs to be booked or done",
+            "completed": false,
+            "category": "flight|hotel|activity|other"
+        }
+    ],
+    "days": [
+        {
+            "day_number": 1,
+            "date": "YYYY-MM-DD or null",
+            "location": "city name",
+            "morning": "morning activities or null",
+            "afternoon": "afternoon activities or null",
+            "evening": "evening activities or null",
+            "accommodation": "hotel name or null",
+            "notes": "any additional notes or null"
+        }
+    ]
+}
+
+Rules:
+- Only include days that have been discussed
+- Mark todo items as completed if the user has confirmed a booking
+- todo_items should include flights, hotels, and any other bookings needed
+- Be specific with activity descriptions when information is available
+- If dates are known, include them in YYYY-MM-DD format
+- Return ONLY valid JSON, no extra text
+"""
