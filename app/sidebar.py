@@ -1,3 +1,4 @@
+# app/sidebar.py
 import streamlit as st
 from agent.spec_schema import TripSpec
 
@@ -7,6 +8,25 @@ def render_sidebar(spec: TripSpec):
 
         if spec.origin.city:
             st.write(f"**From:** {spec.origin.city}")
+        
+        if spec.destination.city:
+            dest = spec.destination.city
+            if spec.destination.country:
+                dest += f", {spec.destination.country}"
+            st.write(f"**To:** {dest}")
+
+        # Show stay segments if multi-destination
+        if spec.stay_segments:
+            st.divider()
+            st.subheader("Stay Segments")
+            for segment in spec.stay_segments:
+                if segment.location:
+                    st.write(f"📍 {segment.location}")
+                    if segment.nights:
+                        st.write(f"   {segment.nights} nights")
+                    if segment.check_in:
+                        st.write(f"   {segment.check_in} → {segment.check_out}")
+
         if spec.dates.nights:
             st.write(f"**Nights:** {spec.dates.nights}")
         if spec.dates.month:
