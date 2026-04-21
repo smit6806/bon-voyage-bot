@@ -6,8 +6,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from agent.spec_schema import TripSpec
 from agent.spec_builder import extract_trip_spec
-from agent.chat import get_chat_response
+from agent.chat import get_chat_response, TOOLS
 from agent.prompts import SYSTEM_PROMPT
+from agent.tool_router import get_required_tools
 from app.sidebar import render_sidebar
 
 # Page config
@@ -31,7 +32,8 @@ render_sidebar(st.session_state.trip_spec)
 for message in st.session_state.messages:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+            if message["content"]:
+                st.markdown(message["content"])
 
 # Handle user input
 if prompt := st.chat_input("Tell me about your dream trip..."):
@@ -39,23 +41,23 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
-        reply = get_chat_response(st.session_state.messages)
-        st.markdown(reply)
-
-    st.session_state.messages.append({"role": "assistant", "content": reply})
-
-    # Update TripSpec
+    # First update TripSpec from user message
     new_spec = extract_trip_spec(
         st.session_state.messages,
         st.session_state.trip_spec
     )
     st.session_state.trip_spec = new_spec
-    
-    # Check which tools are ready
-    from agent.tool_router import get_required_tools
-    ready_tools = get_required_tools(st.session_state.trip_spec)
-    print("READY TOOLS:", ready_tools)
-    
 
+    # Check which tools are ready based on updated TripSpec
+    ready_tools = get_required_tools(st.session_state.trip_spec)
+
+    # Only give GPT access to tools that are ready
+    active_tools = TOOLS if "google_places" in ready_tools else []
+
+    # Get chat response with active tools
+    with st.chat_message("assistant"):
+        reply = get_chat_response(st.session_state.messages, active_tools)
+        st.markdown(reply)
+
+    st.session_state.messages.append({"role": "assistant", "content": reply})
     st.rerun()
