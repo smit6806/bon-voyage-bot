@@ -8,11 +8,11 @@ from services.hotels import search_hotels
 TOOLS = [
     {"type": "function", "function": {
         "name": "search_places",
-        "description": "Search for restaurants, beaches, attractions or activities in a destination",
+        "description": "Search for restaurants, beaches, attractions or activities. Always include the country in the destination e.g. 'Rome, Italy' not just 'Rome'",
         "parameters": {"type": "object",
             "properties": {
                 "query": {"type": "string"},
-                "destination": {"type": "string"}
+                "destination": {"type": "string", "description": "Always include country e.g. 'Positano, Italy'"}
             },
             "required": ["query", "destination"]
         }
@@ -33,10 +33,10 @@ TOOLS = [
     }},
     {"type": "function", "function": {
         "name": "search_hotels",
-        "description": "Search for hotels at a destination given check-in and check-out dates",
+        "description": "Search for hotels at a single specific location. Always include the country e.g. 'Capri, Italy'. Search one location at a time only.",
         "parameters": {"type": "object",
             "properties": {
-                "destination": {"type": "string", "description": "Hotel search location e.g. Rome Italy"},
+                "destination": {"type": "string", "description": "Single hotel location including country e.g. 'Capri, Italy'"},
                 "check_in_date": {"type": "string", "description": "Check-in date in YYYY-MM-DD format"},
                 "check_out_date": {"type": "string", "description": "Check-out date in YYYY-MM-DD format"},
                 "adults": {"type": "integer", "description": "Number of adult travelers"},
@@ -68,14 +68,17 @@ def execute_tool(tool_name: str, args: dict) -> str:
             adults=args.get("adults", 1)
         )
         if results:
-            return "\n".join([
+            flights_text = "\n".join([
                 f"- {r['airline']} {r['flight_number']} | "
-                f"Departs: {r['departure']} | "
+                f"Departs: {r['departure']} (origin local time) | "
+                f"Arrives: {r['arrival']} (origin local time) | "
                 f"Stops: {r['stops']} | "
                 f"Duration: {r['duration']} mins | "
                 f"Price: ${r['price']}"
                 for r in results
             ])
+            flights_text += "\n\nIMPORTANT: Times above are in origin city local timezone. Convert arrival times to destination local timezone using the flight duration and present both to the user."
+            return flights_text
         return "No flights found."
 
     elif tool_name == "search_hotels":
@@ -92,7 +95,8 @@ def execute_tool(tool_name: str, args: dict) -> str:
                 f"- {r['name']} | "
                 f"Rating: {r['rating']} | "
                 f"Per night: {r['price_per_night']} | "
-                f"Total: {r['total_price']}"
+                f"Total: {r['total_price']} | "
+                f"Amenities: {', '.join(r['amenities'][:3]) if r['amenities'] else 'N/A'}"
                 for r in results
             ])
         return "No hotels found."

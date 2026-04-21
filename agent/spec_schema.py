@@ -10,6 +10,12 @@ class Destination(BaseModel):
     country: str = ""
     region: str = ""
 
+class StaySegment(BaseModel):
+    location: str = ""
+    check_in: Optional[str] = None
+    check_out: Optional[str] = None
+    nights: Optional[int] = None
+
 class Dates(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
@@ -35,11 +41,12 @@ class Preferences(BaseModel):
 
 class TripSpec(BaseModel):
     origin: Origin = Origin()
-    destination: Destination = Destination() 
+    destination: Destination = Destination()
     dates: Dates = Dates()
     travelers: Travelers = Travelers()
     budget: Budget = Budget()
     preferences: Preferences = Preferences()
+    stay_segments: list[StaySegment] = []
     must_haves: list[str] = []
     dealbreakers: list[str] = []
     notes: Optional[str] = None

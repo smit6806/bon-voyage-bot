@@ -41,20 +41,23 @@ if prompt := st.chat_input("Tell me about your dream trip..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # First update TripSpec from user message
+    # Update TripSpec
     new_spec = extract_trip_spec(
         st.session_state.messages,
         st.session_state.trip_spec
     )
     st.session_state.trip_spec = new_spec
+    print("TRIPSPEC:", new_spec.model_dump())  # debug
 
-    # Check which tools are ready based on updated TripSpec
+    # Check which tools are ready
     ready_tools = get_required_tools(st.session_state.trip_spec)
+    print("READY TOOLS:", ready_tools)  # debug
 
-    # Only give GPT access to tools that are ready
-    active_tools = TOOLS if "google_places" in ready_tools else []
+    # Build active tools list
+    active_tools = [tool for tool in TOOLS
+                    if tool["function"]["name"] in ready_tools]
 
-    # Get chat response with active tools
+    # Get chat response
     with st.chat_message("assistant"):
         reply = get_chat_response(st.session_state.messages, active_tools)
         st.markdown(reply)

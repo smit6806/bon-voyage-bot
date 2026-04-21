@@ -21,7 +21,8 @@ def search_flights(origin: str, destination: str,
         "currency": "USD",
         "adults": adults,
         "api_key": SERPAPI_KEY,
-        "type": trip_type
+        "type": trip_type,
+        "deep_search": "true"
     }
     
     if return_date:
