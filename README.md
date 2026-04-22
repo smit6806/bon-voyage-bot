@@ -2,6 +2,9 @@
 
 An AI-powered travel planning assistant built with Streamlit and GPT-4o-mini. Bon Voyage Bot helps users plan personalized trips through natural language conversation by gathering trip details, searching for real flights and hotels, and generating a downloadable itinerary document
 
+## Access Application
+[Launch Bon Voyage Bot](https://bon-voyage-bot.streamlit.app)
+
 ## Features
 - Conversational trip planning with a context-aware AI assistant
 - Real-time flight search via SerpAPI (Google Flights)
