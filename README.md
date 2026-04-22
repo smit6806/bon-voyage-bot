@@ -14,35 +14,30 @@ An AI-powered travel planning assistant built with Streamlit and GPT-4o-mini. Bo
 - Multi-city trip support
 
 ## Project Structure
-'''
+```
 bon-voyage-bot/
-│
-├── app/                        # Streamlit UI layer
-│   ├── main.py                 # App entry point, chat loop, session state, tab layout
-│   ├── sidebar.py              # Sidebar rendering (trip summary, weather, budget, bookings)
-│   └── itinerary_tab.py       # Itinerary tab rendering and download button
-│
-├── agent/                      # AI agent logic
-│   ├── chat.py                 # LLM chat response, tool definitions, tool execution
-│   ├── prompts.py              # System prompt and extraction prompts
-│   ├── spec_schema.py          # Pydantic schema for TripSpec (structured trip data)
-│   ├── spec_builder.py         # Extracts and updates TripSpec from conversation
-│   ├── tool_router.py          # Determines which tools are available based on TripSpec
-│   ├── itinerary_schema.py     # Pydantic schema for Itinerary (action items + narrative)
-│   ├── itinerary_builder.py    # Generates itinerary document from conversation in background
-│   └── budget_tracker.py       # Parses confirmed spend from itinerary action items
-│
-├── services/                   # External API integrations
-│   ├── flights.py              # SerpAPI Google Flights integration
-│   ├── hotels.py               # SerpAPI Google Hotels integration
-│   ├── places.py               # Google Places API integration
-│   └── weather.py              # Open-Meteo climate API integration
-│
-├── config.py                   # OpenAI client initialization
-├── requirements.txt            # Python dependencies
-└── .env                        # API keys (not committed to version control)
-'''
-
+├── app/
+│   ├── main.py              # App entry point, chat loop, session state, tab layout
+│   ├── sidebar.py           # Sidebar rendering (trip summary, weather, budget, bookings)
+│   └── itinerary_tab.py     # Itinerary tab rendering and PDF download
+├── agent/
+│   ├── chat.py              # LLM chat response, tool definitions, tool execution
+│   ├── prompts.py           # System prompt and extraction prompts
+│   ├── spec_schema.py       # Pydantic schema for TripSpec (structured trip data)
+│   ├── spec_builder.py      # Extracts and updates TripSpec from conversation
+│   ├── tool_router.py       # Determines which tools are available based on TripSpec
+│   ├── itinerary_schema.py  # Pydantic schema for Itinerary (action items + narrative)
+│   ├── itinerary_builder.py # Generates itinerary document from conversation in background
+│   └── budget_tracker.py    # Parses confirmed spend from itinerary action items
+├── services/
+│   ├── flights.py           # SerpAPI Google Flights integration
+│   ├── hotels.py            # SerpAPI Google Hotels integration
+│   ├── places.py            # Google Places API integration
+│   └── weather.py           # Open-Meteo climate API integration
+├── config.py                # OpenAI client initialization
+├── requirements.txt         # Python dependencies
+└── .env                     # API keys (not committed to version control)
+```
 ## How it Works
 Bon Voyage Bot is built around two data structures that get updated throughout the conversation:
 
