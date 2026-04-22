@@ -1,3 +1,6 @@
+# services/places.py
+# Contains logic for searching places using Google Places API
+
 import requests
 import os
 from dotenv import load_dotenv
@@ -8,6 +11,14 @@ PLACES_API_KEY = os.getenv("GOOGLE_PLACES_API_KEY")
 PLACES_BASE_URL = "https://places.googleapis.com/v1/places:searchText"
 
 def search_places(query: str, destination: str) -> list[dict]:
+    '''
+    Searches for places using Google Places API
+    Args:
+        - query: search query (e.g., "restaurants", "museums")
+        - destination: city or location to search in
+    Returns:
+        - list of place options with details
+    '''
     full_query = f"{query} in {destination}"
 
     headers = {

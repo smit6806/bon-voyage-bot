@@ -1,4 +1,6 @@
 # services/hotels.py
+# Contains logic for searching hotels using SerpAPI
+
 import os
 import requests
 from dotenv import load_dotenv
@@ -32,7 +34,19 @@ def search_hotels(destination: str, check_in_date: str,
                   max_price: float = None,
                   luxury_level: str = None,
                   must_haves: list = None) -> list[dict]:
-
+    '''
+    Searches for hotels using SerpAPI
+    Args:
+    - destination: city or location to search in
+    - check_in_date: date of check-in in YYYY-MM-DD format
+    - check_out_date: date of check-out in YYYY-MM-DD format
+    - adults: number of adult travelers
+    - max_price: (optional) maximum price per night in USD
+    - luxury_level: (optional) one of "budget", "mid", "high", "luxury"
+    - must_haves: (optional) list of amenity keywords to filter by (e.g. "pool", "free breakfast")
+    Returns:
+    - list of hotel options with details
+    '''
     params = {
         "engine": "google_hotels",
         "q": destination,
